@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * 9. Знайти ті слова які мають
@@ -29,7 +31,7 @@ public class Main {
 
                 //Розбиваємо рядок на слова. Роздільник - будь-який
                 //символ, окрім букв або цифр
-                String[] line = data.split("[^a-zA-Z0-9]");
+                String[] line = data.split("[^a-zA-Z0-9\"'-]");
                 shorten(line);
                 words.addAll(Arrays.asList(line));
             }
@@ -57,7 +59,18 @@ public class Main {
 
         for (String word : words)
         {
-            int charsCount = (int)word.toUpperCase(Locale.ROOT).chars().distinct().count();
+            var allChars = word.toUpperCase(Locale.ROOT).chars().toArray();
+            ArrayList<Integer> chars = new ArrayList<>();
+
+            //Вилучимо символи -, ', " із слів
+            for (int ch : allChars)
+            {
+                if (ch != '\'' && ch != '\"' && ch != '-')
+                {
+                    chars.add(ch);
+                }
+            }
+            int charsCount = (int)chars.stream().distinct().count();
 
             if (charsCount == max)
             {
